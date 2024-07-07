@@ -1,12 +1,13 @@
 {
-  "name": "basic_node_project_template",
+  "name": "api-gateway",
   "version": "1.0.0",
   "description": "A basic starter boilerplate project for node",
   "main": "index.js",
   "scripts": {
-    "dev": "npx nodemon src/index"
+    "start": "node -r dotenv/config --experimental-json-modules src/index.js",
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
   },
-  "author": "Prakhar Singh",
+  "author": "Rishit Gupta",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.3.1",

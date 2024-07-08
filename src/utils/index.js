@@ -2,7 +2,7 @@ const { ApiError } = require("./apierror.utils");
 const { ApiResponse } = require("./apiresponse.utils");
 const { asyncHandler } = require("./asycnhandler.utils");
 const { compareTime } = require("./datetime.utils");
-const { seatTypes } = require("./enum.utils");
+const { USER_ROLES_ENUMS } = require("./enum.utils");
 
 
 module.exports = {
@@ -10,5 +10,5 @@ module.exports = {
     ApiResponse,
     asyncHandler,
     compareTime,
-    seatTypes
+    USER_ROLES_ENUMS
 }

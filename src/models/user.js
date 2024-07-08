@@ -11,12 +11,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsToMany(
+        models.Role, 
+        { through : 'UserRoles' , as : 'role' }
+      );
     }
   }
   User.init({
     name: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
     },
     email: {
       type: DataTypes.STRING,
@@ -29,9 +38,9 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        len: [3,10]
-      }
+          validate: {
+            len: [3,10]
+          }
     }
   }, {
     sequelize,

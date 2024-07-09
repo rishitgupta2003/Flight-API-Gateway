@@ -10,5 +10,7 @@ module.exports = {
     ApiResponse,
     asyncHandler,
     compareTime,
-    USER_ROLES_ENUMS
+    USER_ROLES_ENUMS,
+    Auth: require("./auth.utils"),
+    Zod: require("./zod.utils")
 }

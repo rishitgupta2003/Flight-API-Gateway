@@ -7,9 +7,10 @@ const roleRepository = new RoleRepository();
 
 /*
     data : {
+        name,
+        username,
         email,
         password,
-        role
     }
 */
 
@@ -17,9 +18,10 @@ async function createUser(data){
     try {
         const existingUser = await userRepository.findUser(data.email);
         if(existingUser) throw new ApiError(StatusCodes.BAD_REQUEST, "Email Already in Use");
-        const user = userRepository.create(data);
-        const role = roleRepository.getRoleByName(CUSTOMER);
-        user.addRole(role);
+        const user = await userRepository.create(data);
+        const role = await roleRepository.getRoleByName(CUSTOMER);
+        const x = await user.addRole(role);
+        console.log(x);
         return user;      
     } catch (error) {
         if(error.name == 'SequelizeValidationError' || error.name == 'SequelizeUniqueConstraintError'){

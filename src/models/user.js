@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const { USER_ROLES_ENUMS, ApiError, Auth } = require("../utils");
+const { ADMIN, CUSTOMER, FLIGHT_COMPANY } = USER_ROLES_ENUMS;
 const bcrypt = require("bcrypt");
 const { ServerConfig } = require("../config");
 module.exports = (sequelize, DataTypes) => {
@@ -13,10 +15,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(
-        models.Role, 
-        { through : 'UserRoles' , as : 'role' }
-      );
+      this.belongsTo(models.Role, {
+        foreignKey: 'id',
+        onDelete: 'CASCADE'
+      })
     }
   }
   User.init({
@@ -43,15 +45,18 @@ module.exports = (sequelize, DataTypes) => {
           validate: {
             len: [3,10]
           }
+    },
+    role: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,
     modelName: 'User',
   });
+
+  User.beforeCreate((user) => {
+    user.password = bcrypt.hashSync(user.password, Number(ServerConfig.SALT_ROUNDS));
+  })
   return User;
 };
-
-
-User.beforeCreate((user) => {
-  user.password = bcrypt.hashSync(user.password, ServerConfig.SALT_ROUNDS);
-})

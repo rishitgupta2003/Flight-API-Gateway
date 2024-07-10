@@ -1,13 +1,10 @@
 const zod = require("zod");
-const { USER_ROLES_ENUMS } = require("../utils");
-const { ADMIN, CUSTOMER, FLIGHT_COMPANY } = USER_ROLES_ENUMS;
 
-const manageCreateUser = (Name, Username, Email, Password, Role) => {
+const manageCreateUser = (Name, Username, Email, Password)  => {
     const name = zod.string().min(2);
     const username = zod.string().min(4);
     const password = zod.string().min(6);
     const email = zod.string().email();
-    const role = zod.enum([ADMIN, CUSTOMER, FLIGHT_COMPANY]);
 
     return {
         data: {
@@ -15,11 +12,10 @@ const manageCreateUser = (Name, Username, Email, Password, Role) => {
             username: username.safeParse(Username).success,
             password: password.safeParse(Password).success,
             email: email.safeParse(Email).success,
-            role: role.safeParse(Role).success
         },
 
         success: name.safeParse(Name).success &&  username.safeParse(Username).success && password.safeParse(Password).success
-                 && email.safeParse(Email).success && role.safeParse(Role).success
+                 && email.safeParse(Email).success
     }
 }
 

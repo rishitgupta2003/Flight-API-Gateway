@@ -2,6 +2,9 @@
 const {
   Model
 } = require('sequelize');
+
+const { USER_ROLES_ENUMS } = require("../utils");
+
 module.exports = (sequelize, DataTypes) => {
   class Role extends Model {
     /**
@@ -18,7 +21,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Role.init({
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: USER_ROLES_ENUMS.CUSTOMER
+    }
   }, {
     sequelize,
     modelName: 'Role',

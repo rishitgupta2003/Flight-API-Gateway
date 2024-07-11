@@ -9,6 +9,7 @@ class UserRepostiory extends CrudRepository{
     }
     
     async findUser(email){
+        console.log("Inside Find User")
         try {
             const user = await User.findOne(
                 {

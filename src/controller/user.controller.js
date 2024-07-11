@@ -46,11 +46,53 @@ const registerUser = asyncHandler(
 
 const loginUser = asyncHandler(
     async(req, res) => {
+        try{
+            const { email, password } = req.body;
+            const response = await userService.loginUser(
+                {
+                    email: email,
+                    password: password
+                }
+            );
+            return res
+                    .header('x-access-token', response)
+                    .status(StatusCodes.OK)
+                    .json(
+                        new ApiResponse(
+                            StatusCodes.OK,
+                            {},
+                            "User Logged In"
+                        )
+                    )
+        }catch(error){
+            throw new ApiError(
+                error.status_code || StatusCodes.INTERNAL_SERVER_ERROR, error.message || "Something Went Wrong"
+            );
+        }
+    }
+)
 
+const logoutUser = asyncHandler(
+    async(req, res) => {
+        try {
+            return res
+                .status(StatusCodes.OK)
+                .json(
+                    StatusCodes.OK,
+                    {},
+                    "User Logged Out Successfully"
+                )
+        } catch (error) {
+            throw new ApiError(
+                error.status_code || StatusCodes.INTERNAL_SERVER_ERROR, error.message || "Something Went Wrong"
+            );
+        }
     }
 )
 
 
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser,
+    logoutUser
 }

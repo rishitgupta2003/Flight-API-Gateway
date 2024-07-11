@@ -14,14 +14,11 @@ const roleRepository = new RoleRepository();
     }
 */
 
-async function createUser(data){  
+async function createUser(data){
     try {
         const existingUser = await userRepository.findUser(data.email);
         if(existingUser) throw new ApiError(StatusCodes.BAD_REQUEST, "Email Already in Use");
         const user = await userRepository.create(data);
-        const role = await roleRepository.getRoleByName(CUSTOMER);
-        const x = await user.addRole(role);
-        console.log(x);
         return user;      
     } catch (error) {
         if(error.name == 'SequelizeValidationError' || error.name == 'SequelizeUniqueConstraintError'){
@@ -45,9 +42,15 @@ async function loginUser(data){
     try{
         const getUser = await userRepository.findUser(data.email);
         if(!getUser) throw new ApiError(StatusCodes.NOT_FOUND, "User Not Found | Check Email");
-        if(!Auth.passwordCheck(data.password)) throw new ApiError(StatusCodes.FORBIDDEN, "Incorrect Password");
-        
-        const jwt = Auth.createToken(getUser);
+        if(!Auth.passwordCheck(data.password,getUser.password)) throw new ApiError(StatusCodes.FORBIDDEN, "Incorrect Password");
+        const userData = {
+            id: getUser.id,
+            name: getUser.name,
+            username: getUser.username,
+            email: getUser.email,
+            role: (getUser.role == 2) ? CUSTOMER : (getUser.role == 1) ? ADMIN : FLIGHT_COMPANY
+        };
+        const jwt = Auth.createToken(userData);
         return jwt;
     }catch(error){
         throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Something Went Wrong");

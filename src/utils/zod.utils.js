@@ -20,13 +20,13 @@ const manageCreateUser = (Name, Username, Email, Password)  => {
 }
 
 const manageLoginUser = (Email, Password) => {
-    const email = zod.string.email();
+    const email = zod.string().email();
     const password = zod.string().min(6);
 
     return { 
         data: {
-            email: email.safeParse(Email),
-            password: password.safeParse(Password)
+            email: email.safeParse(Email).success,
+            password: password.safeParse(Password).success
         },
         success: email.safeParse(Email).success && password.safeParse(Password).success
     }

@@ -19,6 +19,26 @@ const createUserMiddleware = asyncHandler(
     }
 )
 
+
+const loginUserMiddleware = asyncHandler(
+    async(req, res, next) => {
+        console.log("inside Middleware")
+        try{
+            const {email, password } = req.body;
+            const response = Zod.manageLoginUser(email, password);
+            if(!response.success){
+                throw new ApiError(StatusCodes.BAD_REQUEST, JSON.stringify(response.data));
+            }
+            next();
+        }catch(error){
+            throw new ApiError(
+                error.status_code || StatusCodes.INTERNAL_SERVER_ERROR, error.message || "Something Went Wrong"
+            );
+        }
+    }
+)
+
 module.exports = {
-    createUserMiddleware
+    createUserMiddleware,
+    loginUserMiddleware
 };

@@ -16,9 +16,6 @@ function createToken(data){
         return jwt.sign(
             data,
             ServerConfig.JWT_SECRET,
-            {
-                expiresIn: ServerConfig.JWT_EXPIRY
-            }
         )
     }catch(error){
         console.log(error);

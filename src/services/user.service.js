@@ -80,12 +80,8 @@ async function isAdmin(id){
         if(!user){
             throw new ApiError(StatusCodes.NOT_FOUND, "No such user found with the given id");
         }
-        const adminrole = await roleRepository.getRolebyName(ADMIN);
-        if(!adminrole){
-            throw new ApiError(StatusCodes.NOT_FOUND, "No user found for this role");
-        }
-        return user.hasRole(adminrole);
-        
+        const adminrole = user.role;
+        return adminrole == 1;        
     } catch (error) {
         throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Something went wrong");
     }
@@ -93,6 +89,7 @@ async function isAdmin(id){
 
 async function isAuthenticated(token){
     try {
+        console.log("INSIDE isAuthenticated");
         if(!token){
             throw new ApiError(StatusCodes.BAD_REQUEST, "Missing JWT token");
         }
@@ -103,7 +100,7 @@ async function isAuthenticated(token){
         }
         return user.id;
     } catch (error) {
-        if(error instanceof AppError) throw error;
+        if(error instanceof ApiError) throw error;
         if(error.name == 'JsonWebTokenError'){
             throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid JWT token");
         }

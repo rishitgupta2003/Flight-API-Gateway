@@ -8,37 +8,34 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 
-app.get("/serverInfo", AuthMiddleware.checkAuth, async ( req, res) => {
-  console.log("INSIDE SERVER INFO");
-  res.send("User Logged");
-})
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 app.use(
-  rateLimit(
-    {
-      windowMs: 2*60*1000,
-      max: 15
-    }
-  )
+  rateLimit({
+    windowMs: 2 * 60 * 1000, // 2 minutes
+    max: 15, // Limit each IP to 5 requests per `window`.
+  })
 );
 
-app.use(express.json());
-app.use("/api", apiRoutes);
-app.use("/flightService", AuthMiddleware.checkAuth, AuthMiddleware.isAdmin, createProxyMiddleware({
-  target: ServerConfig.FLIGHTS_URL,
+app.use('/flightService', AuthMiddleware.checkAuth, AuthMiddleware.isAdmin, createProxyMiddleware({ 
+  target: ServerConfig.FLIGHTS_URL, 
   changeOrigin: true,
   pathRewrite: { 
-    '^/flightsService' : '/'
+    '^/flight Service' : '/'
   }
-}))
+}));
 
-app.use("/bookingService", AuthMiddleware.checkAuth, createProxyMiddleware({
+
+app.use('/bookingService', AuthMiddleware.checkAuth, createProxyMiddleware({ 
   target: ServerConfig.BOOKING_URL, 
   changeOrigin: true,
   pathRewrite: { 
     '^/bookingService' : '/'
   }
-}))
+}));
+
+app.use("/api", apiRoutes);
 
 app.listen(ServerConfig.PORT, () => {
   console.log(`Successfully started the server on PORT : ${ServerConfig.PORT}`);

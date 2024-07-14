@@ -37,7 +37,7 @@ async function isAdmin(req, res, next){
     next();
 }
 
-module.exports = {
+module.exports = {          
     checkAuth,
     isAdmin
 }

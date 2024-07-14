@@ -53,7 +53,7 @@ async function loginUser(data){
         const jwt = Auth.createToken(userData);
         return jwt;
     }catch(error){
-        throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Something Went Wrong");
+        throw new ApiError(error.status_code || StatusCodes.INTERNAL_SERVER_ERROR, error.message || "Something Went Wrong");
     }
 }
 

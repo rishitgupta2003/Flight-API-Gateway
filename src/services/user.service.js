@@ -89,7 +89,6 @@ async function isAdmin(id){
 
 async function isAuthenticated(token){
     try {
-        console.log("INSIDE isAuthenticated");
         if(!token){
             throw new ApiError(StatusCodes.BAD_REQUEST, "Missing JWT token");
         }
@@ -98,7 +97,7 @@ async function isAuthenticated(token){
         if(!user){
             throw new ApiError(StatusCodes.NOT_FOUND, "No User found");
         }
-        return user.id;
+        return user;
     } catch (error) {
         if(error instanceof ApiError) throw error;
         if(error.name == 'JsonWebTokenError'){

@@ -9,7 +9,7 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 const app = express();
 
 app.get("/serverInfo", AuthMiddleware.checkAuth, async ( req, res) => {
-  console.log("INSIDE SERVER INFO")
+  console.log("INSIDE SERVER INFO");
   res.send("User Logged");
 })
 
@@ -24,8 +24,8 @@ app.use(
 
 app.use(express.json());
 app.use("/api", apiRoutes);
-app.use("/flightService", AuthMiddleware.checkAuth, createProxyMiddleware({
-  target: ServerConfig.FLIGHTS_URL, 
+app.use("/flightService", AuthMiddleware.checkAuth, AuthMiddleware.isAdmin, createProxyMiddleware({
+  target: ServerConfig.FLIGHTS_URL,
   changeOrigin: true,
   pathRewrite: { 
     '^/flightsService' : '/'

@@ -4,7 +4,6 @@ const { ApiResponse } = require("../utils");
 
 async function checkAuth(req,res,next){
     try {
-        console.log("INSIDE MIDDLEWARE");
         const response = await userService.isAuthenticated(req.headers[`x-access-token`]);
         if(response){
             req.user = response; //setting the user id in the req object
